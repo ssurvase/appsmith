@@ -44,7 +44,7 @@ import {
 } from "entities/Datasource/RestAPIForm";
 import {
   createMessage,
-  REST_API_AUTHORIZATION_APPSMITH_ERROR,
+  REST_API_AUTHORIZATION_APPVEEN_ERROR,
   REST_API_AUTHORIZATION_FAILED,
   REST_API_AUTHORIZATION_SUCCESSFUL,
 } from "constants/messages";
@@ -185,7 +185,7 @@ class DatasourceRestAPIEditor extends React.Component<Props> {
         message = REST_API_AUTHORIZATION_SUCCESSFUL;
         variant = Variant.success;
       } else if (status === "appsmith_error") {
-        message = REST_API_AUTHORIZATION_APPSMITH_ERROR;
+        message = REST_API_AUTHORIZATION_APPVEEN_ERROR;
       }
       Toaster.show({
         text: display_message || createMessage(message),

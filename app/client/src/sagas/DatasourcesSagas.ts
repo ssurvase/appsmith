@@ -1,14 +1,38 @@
 import {
-  all,
-  call,
-  put,
-  select,
-  take,
-  takeEvery,
-  takeLatest,
-} from "redux-saga/effects";
-import { change, getFormValues, initialize } from "redux-form";
-import _, { merge, isEmpty } from "lodash";
+  changeDatasource,
+  createDatasourceFromForm,
+  executeDatasourceQueryReduxAction,
+  expandDatasourceEntity,
+  fetchDatasourceStructure,
+  setDatsourceEditorMode,
+  updateDatasourceSuccess,
+  UpdateDatasourceSuccessAction,
+} from "actions/datasourceActions";
+import { updateReplayEntity } from "actions/pageActions";
+import { setActionProperty } from "actions/pluginActionActions";
+import { ApiResponse, GenericApiResponse } from "api/ApiResponses";
+import { authorizeSaasWithAppsmithToken } from "api/CloudServicesApi";
+import DatasourcesApi, { CreateDatasourceConfig } from "api/DatasourcesApi";
+import SaasApi from "api/SaasApi";
+import { Variant } from "components/ads/common";
+import { Toaster } from "components/ads/Toast";
+import { getConfigInitialValues } from "components/formControls/utils";
+import {
+  API_EDITOR_FORM_NAME,
+  DATASOURCE_DB_FORM,
+  DATASOURCE_REST_API_FORM,
+} from "constants/forms";
+import {
+  createMessage,
+  DATASOURCE_CREATE,
+  DATASOURCE_DELETE,
+  DATASOURCE_UPDATE,
+  DATASOURCE_VALID,
+  SAAS_APPVEEN_TOKEN_NOT_FOUND,
+  SAAS_AUTHORIZATION_APPVEEN_ERROR,
+  SAAS_AUTHORIZATION_FAILED,
+  SAAS_AUTHORIZATION_SUCCESSFUL,
+} from "constants/messages";
 import {
   ReduxAction,
   ReduxActionErrorTypes,
@@ -18,78 +42,53 @@ import {
   ReduxFormActionTypes,
 } from "constants/ReduxActionConstants";
 import {
-  getCurrentApplicationId,
-  getCurrentPageId,
-} from "selectors/editorSelectors";
-import {
-  getDatasource,
-  getDatasourceDraft,
-  getPluginForm,
-  getGenerateCRUDEnabledPluginMap,
-} from "selectors/entitiesSelector";
-import {
-  changeDatasource,
-  createDatasourceFromForm,
-  expandDatasourceEntity,
-  fetchDatasourceStructure,
-  setDatsourceEditorMode,
-  updateDatasourceSuccess,
-  UpdateDatasourceSuccessAction,
-  executeDatasourceQueryReduxAction,
-} from "actions/datasourceActions";
-import { ApiResponse, GenericApiResponse } from "api/ApiResponses";
-import DatasourcesApi, { CreateDatasourceConfig } from "api/DatasourcesApi";
-import { Datasource } from "entities/Datasource";
-
-import {
   API_EDITOR_ID_URL,
   DATA_SOURCES_EDITOR_ID_URL,
   INTEGRATION_EDITOR_MODES,
   INTEGRATION_EDITOR_URL,
   INTEGRATION_TABS,
 } from "constants/routes";
-import history from "utils/history";
-import {
-  API_EDITOR_FORM_NAME,
-  DATASOURCE_DB_FORM,
-  DATASOURCE_REST_API_FORM,
-} from "constants/forms";
-import { validateResponse } from "./ErrorSagas";
-import AnalyticsUtil from "utils/AnalyticsUtil";
-import { getFormData } from "selectors/formSelectors";
-import { getCurrentOrgId } from "selectors/organizationSelectors";
-import { Variant } from "components/ads/common";
-import { Toaster } from "components/ads/Toast";
-import { getConfigInitialValues } from "components/formControls/utils";
-import { setActionProperty } from "actions/pluginActionActions";
-import SaasApi from "api/SaasApi";
-import { authorizeSaasWithAppsmithToken } from "api/CloudServicesApi";
-import {
-  createMessage,
-  DATASOURCE_CREATE,
-  DATASOURCE_DELETE,
-  DATASOURCE_UPDATE,
-  DATASOURCE_VALID,
-  SAAS_APPSMITH_TOKEN_NOT_FOUND,
-  SAAS_AUTHORIZATION_APPSMITH_ERROR,
-  SAAS_AUTHORIZATION_FAILED,
-  SAAS_AUTHORIZATION_SUCCESSFUL,
-} from "constants/messages";
-import AppsmithConsole from "utils/AppsmithConsole";
+import { PluginType } from "entities/Action";
 import { ENTITY_TYPE } from "entities/AppsmithConsole";
-import localStorage from "utils/localStorage";
+import LOG_TYPE from "entities/AppsmithConsole/logtype";
+import { Datasource } from "entities/Datasource";
+import _, { isEmpty, merge } from "lodash";
 import log from "loglevel";
 import { APPSMITH_TOKEN_STORAGE_KEY } from "pages/Editor/SaaSEditor/constants";
+import { change, getFormValues, initialize } from "redux-form";
+import {
+  all,
+  call,
+  put,
+  select,
+  take,
+  takeEvery,
+  takeLatest,
+} from "redux-saga/effects";
 import { checkAndGetPluginFormConfigsSaga } from "sagas/PluginSagas";
-import { PluginType } from "entities/Action";
-import LOG_TYPE from "entities/AppsmithConsole/logtype";
+import {
+  getCurrentApplicationId,
+  getCurrentPageId,
+} from "selectors/editorSelectors";
+import {
+  getDatasource,
+  getDatasourceDraft,
+  getGenerateCRUDEnabledPluginMap,
+  getPluginForm,
+} from "selectors/entitiesSelector";
+import { getFormData } from "selectors/formSelectors";
+import { getCurrentOrgId } from "selectors/organizationSelectors";
+import AnalyticsUtil from "utils/AnalyticsUtil";
+import AppsmithConsole from "utils/AppsmithConsole";
 import { isDynamicValue } from "utils/DynamicBindingUtils";
-import { getQueryParams } from "../utils/AppsmithUtils";
-import { getGenerateTemplateFormURL } from "../constants/routes";
-import { GenerateCRUDEnabledPluginMap } from "../api/PluginApi";
-import { getIsGeneratePageInitiator } from "../utils/GenerateCrudUtil";
 import { trimQueryString } from "utils/helpers";
-import { updateReplayEntity } from "actions/pageActions";
+import history from "utils/history";
+import localStorage from "utils/localStorage";
+import { GenerateCRUDEnabledPluginMap } from "../api/PluginApi";
+import { getGenerateTemplateFormURL } from "../constants/routes";
+import { getQueryParams } from "../utils/AppsmithUtils";
+import { getIsGeneratePageInitiator } from "../utils/GenerateCrudUtil";
+import { validateResponse } from "./ErrorSagas";
 
 function* fetchDatasourcesSaga() {
   try {
@@ -401,9 +400,9 @@ function* getOAuthAccessTokenSaga(
   const appsmithToken = localStorage.getItem(APPSMITH_TOKEN_STORAGE_KEY);
   if (!appsmithToken) {
     // Error out because auth token should been here
-    log.error(SAAS_APPSMITH_TOKEN_NOT_FOUND);
+    log.error(SAAS_APPVEEN_TOKEN_NOT_FOUND);
     Toaster.show({
-      text: SAAS_AUTHORIZATION_APPSMITH_ERROR,
+      text: SAAS_AUTHORIZATION_APPVEEN_ERROR,
       variant: Variant.danger,
     });
     return;

@@ -7,7 +7,7 @@ import StyledHeader from "components/designSystems/appsmith/StyledHeader";
 import { AppState } from "reducers";
 import { BASE_URL } from "constants/routes";
 import { Colors } from "constants/Colors";
-import { ReactComponent as AppsmithLogo } from "assets/svg/appsmith_logo_primary.svg";
+import { ReactComponent as AppsmithLogo } from "assets/svg/appveen_logo_RBG.svg";
 
 const StyledPageHeader = styled(StyledHeader)`
   width: 100%;

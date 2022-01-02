@@ -3,7 +3,7 @@ import Button, { Category } from "components/ads/Button";
 import {
   ONBOARDING_INTRO_CONNECT_DATA_WIDGET,
   ONBOARDING_INTRO_CONNECT_YOUR_DATABASE,
-  HOW_APPSMITH_WORKS,
+  HOW_APPVEEN_WORKS,
   ONBOARDING_INTRO_PUBLISH,
   BUILD_MY_FIRST_APP,
   ONBOARDING_INTRO_FOOTER,
@@ -124,7 +124,7 @@ export default function IntroductionModal({ close }: IntroductionModalProps) {
             onClick={onBuildApp}
           />
           <ModalHeader className="t--how-appsmith-works-modal-header">
-            {createMessage(HOW_APPSMITH_WORKS)}
+            {createMessage(HOW_APPVEEN_WORKS)}
           </ModalHeader>
           <ModalBody>
             <ModalImgWrapper>

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import styled, { ThemeProvider } from "styled-components";
 import StyledHeader from "components/designSystems/appsmith/StyledHeader";
 // import AppsmithLogo from "assets/images/appsmith_logo.png";
-import { ReactComponent as AppsmithLogo } from "assets/svg/appsmith_logo_primary.svg";
+import { ReactComponent as AppsmithLogo } from "assets/svg/appveen_logo_RBG.svg";
 import {
   isPermitted,
   PERMISSION_TYPE,

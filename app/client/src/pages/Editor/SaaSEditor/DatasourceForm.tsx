@@ -32,7 +32,7 @@ import {
 } from "../DataSourceEditor/JSONtoForm";
 import { getConfigInitialValues } from "components/formControls/utils";
 import {
-  SAAS_AUTHORIZATION_APPSMITH_ERROR,
+  SAAS_AUTHORIZATION_APPVEEN_ERROR,
   SAAS_AUTHORIZATION_FAILED,
 } from "constants/messages";
 import { Variant } from "components/ads/common";
@@ -122,7 +122,7 @@ class DatasourceSaaSEditor extends JSONtoForm<Props> {
       const variant = Variant.danger;
       if (status !== "success") {
         if (status === "appsmith_error") {
-          message = SAAS_AUTHORIZATION_APPSMITH_ERROR;
+          message = SAAS_AUTHORIZATION_APPVEEN_ERROR;
         }
         Toaster.show({ text: display_message || message, variant });
       } else {

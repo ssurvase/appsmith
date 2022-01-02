@@ -48,7 +48,7 @@ export const LOGIN_PAGE_INVALID_CREDS_ERROR = () =>
   `It looks like you may have entered incorrect/invalid credentials. Please try again or reset password using the button below.`;
 export const LOGIN_PAGE_INVALID_CREDS_FORGOT_PASSWORD_LINK = () =>
   `Reset Password`;
-export const NEW_TO_APPSMITH = () => `New to Appsmith?`;
+export const NEW_TO_APPVEEN = () => `New to Appveen?`;
 
 export const LOGIN_PAGE_LOGIN_BUTTON_TEXT = () => `sign in`;
 export const LOGIN_PAGE_FORGOT_PASSWORD_TEXT = () => `Forgot Password`;
@@ -217,7 +217,7 @@ export const GOOGLE_RECAPTCHA_DOMAIN_ERROR = () =>
   `Google Re-Captcha token generation failed! Please check the allowed domains.`;
 
 export const SERVER_API_TIMEOUT_ERROR = () =>
-  `Appsmith server is taking too long to respond. Please try again after some time`;
+  `Appveen server is taking too long to respond. Please try again after some time`;
 export const DEFAULT_ERROR_MESSAGE = () => `There was an unexpected error`;
 export const REMOVE_FILE_TOOL_TIP = () => "Remove Upload";
 export const ERROR_FILE_TOO_LARGE = (fileSize: string) =>
@@ -283,23 +283,23 @@ export const REST_API_AUTHORIZATION_SUCCESSFUL = () =>
   "Authorization was successful!";
 export const REST_API_AUTHORIZATION_FAILED = () =>
   "Authorization failed. Please check your details or try again.";
-// Todo: improve this for appsmith_error error message
-export const REST_API_AUTHORIZATION_APPSMITH_ERROR = () =>
+// Todo: improve this for appveen_error error message
+export const REST_API_AUTHORIZATION_APPVEEN_ERROR = () =>
   "Something went wrong.";
 
 export const SAAS_AUTHORIZATION_SUCCESSFUL = "Authorization was successful!";
 export const SAAS_AUTHORIZATION_FAILED =
   "Authorization failed. Please check your details or try again.";
-// Todo: improve this for appsmith_error error message
-export const SAAS_AUTHORIZATION_APPSMITH_ERROR = "Something went wrong.";
-export const SAAS_APPSMITH_TOKEN_NOT_FOUND = "Appsmith token not found";
+// Todo: improve this for appveen_error error message
+export const SAAS_AUTHORIZATION_APPVEEN_ERROR = "Something went wrong.";
+export const SAAS_APPVEEN_TOKEN_NOT_FOUND = "Appveen token not found";
 
 export const LOCAL_STORAGE_QUOTA_EXCEEDED_MESSAGE = () =>
   "Error saving a key in localStorage. You have exceeded the allowed storage size limit";
 export const LOCAL_STORAGE_NO_SPACE_LEFT_ON_DEVICE_MESSAGE = () =>
   "Error saving a key in localStorage. You have run out of disk space";
 export const LOCAL_STORAGE_NOT_SUPPORTED_APP_MIGHT_NOT_WORK_AS_EXPECTED = () =>
-  "Localstorage storage is not supported on your device. Some features including the Appsmith store won't work.";
+  "Localstorage storage is not supported on your device. Some features including the Appveen store won't work.";
 
 export const OMNIBAR_PLACEHOLDER = () =>
   `Search Widgets, Queries, Documentation`;
@@ -379,7 +379,7 @@ export const EMPTY_RESPONSE_FIRST_HALF = () => "🙌 Click on";
 export const EMPTY_RESPONSE_LAST_HALF = () => "to get a response";
 export const INVALID_EMAIL = () => "Please enter a valid email";
 export const DEBUGGER_INTERCOM_TEXT = (text: string) =>
-  `Hi, \nI'm facing the following error on Appsmith, can you please help? \n\n${text}`;
+  `Hi, \nI'm facing the following error on Appveen, can you please help? \n\n${text}`;
 export const DEBUGGER_TRIGGER_ERROR = (propertyName: string) =>
   `Error occurred while evaluating trigger ${propertyName}`;
 
@@ -388,7 +388,7 @@ export const DEBUGGER_SEARCH_GOOGLE = () => "Ask Google";
 export const DEBUGGER_COPY_MESSAGE = () => "Copy";
 export const DEBUGGER_OPEN_DOCUMENTATION = () => "Open documentation";
 export const DEBUGGER_SEARCH_SNIPPET = () => "Browse code snippets";
-export const DEBUGGER_APPSMITH_SUPPORT = () => "Get Appsmith support";
+export const DEBUGGER_APPVEEN_SUPPORT = () => "Get Appveen support";
 
 //action creator menu
 export const NO_ACTION = () => `No action`;
@@ -663,7 +663,7 @@ export const MERGED_SUCCESSFULLY = () => "Merged successfully";
 export const SNIPPET_DESCRIPTION = () =>
   `Search and insert code snippets to perform complex actions quickly.`;
 export const DOC_DESCRIPTION = () =>
-  `Find answers through Appsmith documentation.`;
+  `Find answers through Appveen documentation.`;
 export const NAV_DESCRIPTION = () =>
   `Navigate to any page, widget or file across this project.`;
 
@@ -694,14 +694,14 @@ export enum ONBOARDING_CHECKLIST_ACTIONS {
 }
 
 export const ONBOARDING_CHECKLIST_BANNER_HEADER = () =>
-  "Amazing work! You’ve explored the basics of Appsmith";
+  "Amazing work! You’ve explored the basics of Appveen";
 export const ONBOARDING_CHECKLIST_BANNER_BODY = () =>
   "You can carry on here, or explore the homepage to see how your projects are stored.";
 export const ONBOARDING_CHECKLIST_BANNER_BUTTON = () => "Explore homepage";
 
-export const ONBOARDING_CHECKLIST_HEADER = () => "👋 Welcome to Appsmith!";
+export const ONBOARDING_CHECKLIST_HEADER = () => "👋 Welcome to Appveen!";
 export const ONBOARDING_CHECKLIST_BODY = () =>
-  "Let’s get you started on your first application, explore Appsmith yourself or follow our guide below to discover what Appsmith can do.";
+  "Let’s get you started on your first application, explore Appveen yourself or follow our guide below to discover what Appveen can do.";
 export const ONBOARDING_CHECKLIST_COMPLETE_TEXT = () => "complete";
 
 export const ONBOARDING_CHECKLIST_CONNECT_DATA_SOURCE = {
@@ -733,7 +733,7 @@ export const ONBOARDING_CHECKLIST_FOOTER = () =>
   "Not sure where to start? Take the welcome tour";
 
 //Introduction modal
-export const HOW_APPSMITH_WORKS = () => "Here’s how Appsmith works";
+export const HOW_APPVEEN_WORKS = () => "Here’s how Appveen works";
 export const ONBOARDING_INTRO_CONNECT_YOUR_DATABASE = () =>
   "Connect your database or API";
 export const ONBOARDING_INTRO_CONNECT_DATA_WIDGET = () =>
@@ -816,7 +816,7 @@ export const WELCOME_FORM_DATA_COLLECTION_BODY = () =>
   "Share anonymous usage data to help improve the product.";
 export const WELCOME_FORM_DATA_COLLECTION_LINK = () => "See what is shared";
 export const WELCOME_FORM_DATA_COLLECTION_LABEL_ENABLE = () =>
-  "Share data & make Appsmith better!";
+  "Share data & make Appveen better!";
 export const WELCOME_FORM_DATA_COLLECTION_LABEL_DISABLE = () =>
   "Don't share any data";
 export const WELCOME_FORM_NEWLETTER_HEADER = () => "Stay in touch";
@@ -838,7 +838,7 @@ export const LAYOUT_DROPDOWN_TOOLTIP = () =>
   "Choose how your application looks on desktop, tablet and mobile devices";
 export const DEPLOY_BUTTON_TOOLTIP = () =>
   "Deploy the current version of the application";
-export const SHARE_BUTTON_TOOLTIP = () => "Invite your team to Appsmith";
+export const SHARE_BUTTON_TOOLTIP = () => "Invite your team to Appveen";
 export const SHARE_BUTTON_TOOLTIP_WITH_USER = (length: number) => () =>
   `Shared with ${length} other`;
 export const DEBUGGER_TOOLTIP = () => "Open Debugger";
@@ -867,7 +867,7 @@ export const RESTART_ERROR_BODY = () =>
   "Something went wrong. Please contact your administrator.";
 export const RESTART_ERROR_HEADER = () => "Restart failed";
 export const INFO_VERSION_MISMATCH_FOUND_RELOAD_REQUEST = () =>
-  "Hey! There is a new version of Appsmith available. Please consider refreshing your window.";
+  "Hey! There is a new version of Appveen available. Please consider refreshing your window.";
 export const TEST_EMAIL_SUCCESS = (email: string) => () =>
   `Test email sent, please check the inbox of ${email}`;
 export const TEST_EMAIL_SUCCESS_TROUBLESHOOT = () => "Troubleshoot";
@@ -877,7 +877,7 @@ export const WELCOME_FORM_NON_SUPER_USER_ROLE_DROPDOWN = () =>
   "Tell us more about what you do at work?";
 export const WELCOME_FORM_NON_SUPER_USER_ROLE = () => "Role";
 export const WELCOME_FORM_NON_SUPER_USER_USE_CASE = () =>
-  "What are you planning to use Appsmith for?";
+  "What are you planning to use Appveen for?";
 export const QUERY_CONFIRMATION_MODAL_MESSAGE = () =>
   "Are you sure you want to perform this action?";
 export const ENTITY_EXPLORER_TITLE = () => "NAVIGATION";

@@ -17,7 +17,7 @@ import { filterCategories, SEARCH_CATEGORY_ID } from "../GlobalSearch/utils";
 import { getAppsmithConfigs } from "configs";
 import {
   createMessage,
-  DEBUGGER_APPSMITH_SUPPORT,
+  DEBUGGER_APPVEEN_SUPPORT,
   DEBUGGER_COPY_MESSAGE,
   DEBUGGER_INTERCOM_TEXT,
   DEBUGGER_OPEN_DOCUMENTATION,
@@ -193,7 +193,7 @@ const searchAction: Record<
   },
   [CONTEXT_MENU_ACTIONS.INTERCOM]: {
     icon: "support",
-    text: createMessage(DEBUGGER_APPSMITH_SUPPORT),
+    text: createMessage(DEBUGGER_APPVEEN_SUPPORT),
     onSelect: (error: Message) => {
       AnalyticsUtil.logEvent("DEBUGGER_CONTEXT_MENU_CLICK", {
         menuItem: CONTEXT_MENU_ACTIONS.INTERCOM,

@@ -13,7 +13,7 @@ import {
 import AppInviteUsersForm from "pages/organization/AppInviteUsersForm";
 import AnalyticsUtil from "utils/AnalyticsUtil";
 import { FormDialogComponent } from "components/editorComponents/form/FormDialogComponent";
-import AppsmithLogo from "assets/images/appsmith_logo_square.png";
+import AppsmithLogo from "assets/images/appveen_logo_RBG_mnemonic.png";
 import { Link } from "react-router-dom";
 import { AppState } from "reducers";
 import {

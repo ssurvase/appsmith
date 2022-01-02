@@ -1,9 +1,9 @@
+import { CodeEditorExpected } from "components/editorComponents/CodeEditor";
 import { createMessage, FIELD_REQUIRED_ERROR } from "constants/messages";
 import { ValidationConfig } from "constants/PropertyControlConstants";
 import { ValidationTypes } from "constants/WidgetValidation";
-import moment from "moment";
 import { sample } from "lodash";
-import { CodeEditorExpected } from "components/editorComponents/CodeEditor";
+import moment from "moment";
 import { AutocompleteDataType } from "utils/autocomplete/TernServer";
 
 export const required = (value: any) => {
@@ -147,7 +147,7 @@ export function getExpectedValue(
     case ValidationTypes.IMAGE_URL:
       return {
         type: `base64 encoded image | data uri | image url`,
-        example: `https://app.appsmith.com/static/media/appsmith_logo_square.3867b195.png`,
+        example: `https://app.appsmith.com/static/media/appveen_logo_RBG_mnemonic.3867b195.png`,
         autocompleteDataType: AutocompleteDataType.STRING,
       };
     case ValidationTypes.SAFE_URL:

@@ -21,7 +21,7 @@ import {
   LOGIN_PAGE_SIGN_UP_LINK_TEXT,
   LOGIN_PAGE_INVALID_CREDS_ERROR,
   LOGIN_PAGE_INVALID_CREDS_FORGOT_PASSWORD_LINK,
-  NEW_TO_APPSMITH,
+  NEW_TO_APPVEEN,
   createMessage,
 } from "constants/messages";
 import FormMessage from "components/ads/formFields/FormMessage";
@@ -117,7 +117,7 @@ export function Login(props: LoginFormProps) {
         <h1>{createMessage(LOGIN_PAGE_TITLE)}</h1>
       </AuthCardHeader>
       <SignUpLinkSection>
-        {createMessage(NEW_TO_APPSMITH)}
+        {createMessage(NEW_TO_APPVEEN)}
         <AuthCardNavLink
           style={{ marginLeft: props.theme.spaces[3] }}
           to={signupURL}
