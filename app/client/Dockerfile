@@ -3,7 +3,35 @@
 # --------------------------------------------------------------------
 FROM node:14 as BUILDER
 
-COPY . .
+COPY craco.build.config.js .
+COPY craco.common.config.js .
+COPY craco.dev.config.js .
+COPY cypress .
+COPY cypress.env.json .
+COPY cypress.json .
+COPY docker .
+COPY generators .
+COPY gitbook-algolia-lambda.js .
+COPY index.tsx .
+COPY jest.config.js .
+COPY netlify.toml .
+COPY package.json .
+COPY patches .
+COPY public .
+COPY README.md .
+COPY README.old.md .
+COPY src .
+COPY start-https.sh .
+COPY stats.json .
+COPY tailwind.config.js .
+COPY test .
+COPY tsconfig.json .
+COPY tsconfig.path.json .
+COPY typings .
+COPY vercel.json .
+COPY yarn.lock .
+
+COPY build.sh .
 
 RUN . ./build.sh
 
