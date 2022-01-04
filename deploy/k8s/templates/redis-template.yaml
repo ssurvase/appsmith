@@ -34,13 +34,9 @@ spec:
         ports:
           - containerPort: 6379
         volumeMounts:
-          - name: redis-persistent-storage
+          - name: redis-location
             mountPath: /data
-  volumeClaimTemplates:
-  - metadata:
-      name: redis-persistent-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 5Gi
+      volumes:
+        - name: redis-location
+          hostPath:
+            path: /mnt/redis

@@ -35,16 +35,12 @@ spec:
         ports:
           - containerPort: 27017
         volumeMounts:
-          - name: mongo-persistent-storage
+          - name: db-location
             mountPath: /data/db
         envFrom:
           - configMapRef:
               name: mongo-config
-  volumeClaimTemplates:
-  - metadata:
-      name: mongo-persistent-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 10Gi
+      volumes:
+        - name: db-location
+          hostPath:
+            path: /mnt/db
