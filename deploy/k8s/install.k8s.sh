@@ -190,21 +190,7 @@ echo_contact_support() {
 
 bye() {  # Prints a friendly good bye message and exits the script.
     set +o errexit
-    echo "Please share your email to receive support with the installation"
-    read -rp 'Email: ' email
-    curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
-    --header 'Content-Type: text/plain' \
-    --data-raw '{
-      "userId": "'"$APPSMITH_INSTALLATION_ID"'",
-      "event": "Installation Support",
-      "data": {
-          "os": "'"$os"'",
-          "email": "'"$email"'",
-          "platform": "k8s"
-       }
-    }'
     echo -e "\nExiting for now. Bye! \U1F44B\n"
-    exit 1
 }
 download_template_file() {
     templates_dir="$(mktemp -d)"
@@ -304,16 +290,6 @@ ask_telemetry() {
         disable_telemetry="true"
     fi
     echo "++++++++++++++++++++++++++++++++++++++++++++"
-
-    curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
-    --header 'Content-Type: text/plain' \
-    --data-raw '{
-        "userId": "'"$APPSMITH_INSTALLATION_ID"'",
-        "event": "Installation Telemetry",
-        "data": {
-            "disable-telemetry": "'"$disable_telemetry"'"
-        }
-    }' > /dev/null
 }
 
 echo -e "👋  Thank you for trying out Appsmith! "
@@ -330,16 +306,16 @@ APPSMITH_INSTALLATION_ID=$(curl -s 'https://api64.ipify.org')
 # Run bye if failure happens
 trap bye EXIT
 
-curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
---header 'Content-Type: text/plain' \
---data-raw '{
-  "userId": "'"$APPSMITH_INSTALLATION_ID"'",
-  "event": "Installation Started",
-  "data": {
-      "os": "'"$os"'",
-      "platform": "k8s"
-   }
-}'
+# curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
+# --header 'Content-Type: text/plain' \
+# --data-raw '{
+#   "userId": "'"$APPSMITH_INSTALLATION_ID"'",
+#   "event": "Installation Started",
+#   "data": {
+#       "os": "'"$os"'",
+#       "platform": "k8s"
+#    }
+# }'
 
 if [[ $desired_os -eq 0 ]];then
     echo ""
@@ -444,42 +420,42 @@ fi
 
 echo ""
 
-if confirm n "Do you have a custom domain that you would like to link? (Only for cloud installations)"; then
-    read -rp 'Enter the domain or subdomain on which you want to host appsmith (example.com / app.example.com): ' custom_domain
-    curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
-    --header 'Content-Type: text/plain' \
-    --data-raw '{
-      "userId": "'"$APPSMITH_INSTALLATION_ID"'",
-      "event": "Installation Custom Domain",
-      "data": {
-          "os": "'"$os"'",
-          "platform": "k8s"
-       }
-    }'
-    echo ""
-    echo "+++++++++++ IMPORTANT PLEASE READ ++++++++++++++++++++++"
-    echo "Please update your DNS records with your domain registrar"
-    echo "You can read more about this in our Documentation"
-    echo "https://docs.appsmith.com/v/v1.2.1/setup#custom-domains"
-    echo "+++++++++++++++++++++++++++++++++++++++++++++++"
-    echo ""
-    echo "Would you like to provision an SSL certificate for your custom domain / subdomain?"
-    if confirm y '(Your DNS records must be updated for us to proceed)'; then
-        ssl_enable="true"
-    fi
+# if confirm n "Do you have a custom domain that you would like to link? (Only for cloud installations)"; then
+#     read -rp 'Enter the domain or subdomain on which you want to host appsmith (example.com / app.example.com): ' custom_domain
+#     curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
+#     --header 'Content-Type: text/plain' \
+#     --data-raw '{
+#       "userId": "'"$APPSMITH_INSTALLATION_ID"'",
+#       "event": "Installation Custom Domain",
+#       "data": {
+#           "os": "'"$os"'",
+#           "platform": "k8s"
+#        }
+#     }'
+#     echo ""
+#     echo "+++++++++++ IMPORTANT PLEASE READ ++++++++++++++++++++++"
+#     echo "Please update your DNS records with your domain registrar"
+#     echo "You can read more about this in our Documentation"
+#     echo "https://docs.appsmith.com/v/v1.2.1/setup#custom-domains"
+#     echo "+++++++++++++++++++++++++++++++++++++++++++++++"
+#     echo ""
+#     echo "Would you like to provision an SSL certificate for your custom domain / subdomain?"
+#     if confirm y '(Your DNS records must be updated for us to proceed)'; then
+#         ssl_enable="true"
+#     fi
 
-    read -rp 'Enter email address to create SSL certificate: (Optional, but strongly recommended): ' user_email
+#     read -rp 'Enter email address to create SSL certificate: (Optional, but strongly recommended): ' user_email
 
-    if confirm n 'Do you want to create certificate in staging mode (which is used for dev purposes and is not subject to rate limits)?'; then
-        issuer_server="https://acme-staging-v02.api.letsencrypt.org/directory"
-    else
-        issuer_server="https://acme-v02.api.letsencrypt.org/directory"
-    fi
-fi
+#     if confirm n 'Do you want to create certificate in staging mode (which is used for dev purposes and is not subject to rate limits)?'; then
+#         issuer_server="https://acme-staging-v02.api.letsencrypt.org/directory"
+#     else
+#         issuer_server="https://acme-v02.api.letsencrypt.org/directory"
+#     fi
+# fi
 
 # Setting the default telemetry choice to false
 disable_telemetry="true"
-ask_telemetry
+# ask_telemetry
 
 echo ""
 echo "Downloading the configuration templates..."
@@ -546,32 +522,11 @@ if [[ $status_code -ne 401 ]]; then
     echo -e "kubectl get pods"
     echo "For troubleshooting help, please reach out to us via our Discord server: https://discord.com/invite/rBTTVJp"
     echo "++++++++++++++++++++++++++++++++++++++++"
-    echo ""
-    echo "Please share your email to receive help with the installation"
-    read -rp 'Email: ' email
-    curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
-    --header 'Content-Type: text/plain' \
-    --data-raw '{
-      "userId": "'"$APPSMITH_INSTALLATION_ID"'",
-      "event": "Installation Support",
-      "data": {
-          "os": "'"$os"'",
-          "email": "'"$email"'",
-          "platform": "k8s"
-       }
-    }'
 else
-    curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
-    --header 'Content-Type: text/plain' \
-    --data-raw '{
-      "userId": "'"$APPSMITH_INSTALLATION_ID"'",
-      "event": "Installation Success",
-      "data": {
-          "os": "'"$os"'",
-          "platform": "k8s"
-       }
-    }'
     echo "+++++++++++ SUCCESS ++++++++++++++++++++++++++++++"
+    echo "++++++++++++++++++++++++++++++++++++++++++++++++++"
+    echo "APPSMITH_INSTALLATION_ID :: $APPSMITH_INSTALLATION_ID"
+    echo "++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo "Your installation is complete!"
     echo ""
     if [[ -z $custom_domain ]]; then
@@ -582,21 +537,6 @@ else
     echo ""
     echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
     echo ""
-    echo "Need help Getting Started?"
-    echo "Join our Discord server https://discord.com/invite/rBTTVJp"
-    echo "Please share your email to receive support & updates about appsmith!"
-    read -rp 'Email: ' email
-    curl -s --location --request POST 'https://hook.integromat.com/dkwb6i52am93pi30ojeboktvj32iw0fa' \
-    --header 'Content-Type: text/plain' \
-    --data-raw '{
-      "userId": "'"$APPSMITH_INSTALLATION_ID"'",
-      "event": "Identify Successful Installation",
-      "data": {
-          "os": "'"$os"'",
-          "email": "'"$email"'",
-          "platform": "k8s"
-       }
-    }'
 fi
 
 echo -e "\nPeace out \U1F596\n"
