@@ -7,7 +7,7 @@ COPY package.json .
 
 RUN npm i --production
 
-RUN npm i -g @craco/craco
+RUN npm i -g @craco/craco tailwindcss autoprefixer
 
 COPY craco.build.config.js .
 COPY craco.common.config.js .
