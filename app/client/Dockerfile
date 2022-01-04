@@ -19,6 +19,7 @@ COPY cypress.env.json .
 COPY cypress.json .
 COPY docker .
 COPY generators .
+COPY dummy.ts .
 COPY gitbook-algolia-lambda.js .
 COPY index.tsx .
 COPY jest.config.js .
