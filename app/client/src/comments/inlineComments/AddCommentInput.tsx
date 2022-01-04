@@ -127,8 +127,8 @@ const resetEditorState = (editorState: EditorState) => {
 };
 
 const appsmithSupport = {
-  name: "appsmith",
-  user: { username: appsmithSupportEmail, name: "appsmith" },
+  name: "appveen",
+  user: { username: appsmithSupportEmail, name: "appveen" },
   isSupport: true,
 };
 

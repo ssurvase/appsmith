@@ -214,7 +214,7 @@ class Editor extends Component<Props> {
             <Helmet>
               <meta charSet="utf-8" />
               <title>
-                {`${this.props.currentApplicationName} |`} Editor | Appsmith
+                {`${this.props.currentApplicationName} |`} Editor | Appveen
               </title>
             </Helmet>
             <GlobalHotKeys>
