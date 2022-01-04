@@ -5,7 +5,7 @@ FROM node:14 as BUILDER
 
 COPY . .
 
-RUN build.sh
+RUN . ./build.sh
 
 
 # --------------------------------------------------------------------
