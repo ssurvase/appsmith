@@ -262,7 +262,7 @@ wait_for_application_start() {
     # The while loop is important because for-loops don't work for dynamic values
     while [[ $timeout -gt 0 ]]; do
         if [[ $address == "" || $address == null ]]; then
-            address=`kubectl get ingress appsmith-ingress -o json | jq -r '.status.loadBalancer.ingress[0].ip'`
+            address=`get svc appsmith-editor -o json | jq -r '.spec.clusterIP'`
         fi
         status_code="$(curl -s -o /dev/null -w "%{http_code}" $protocol://$address/api/v1 || true)"
         if [[ status_code -eq 401 ]]; then

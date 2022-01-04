@@ -11,6 +11,7 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
+    nodePort: 31081
 
 ---
 apiVersion: apps/v1
