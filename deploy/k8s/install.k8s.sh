@@ -513,7 +513,7 @@ fi
 
 overwrite_file "config-template" "nginx-configmap.yaml"
 overwrite_file "config-template" "appsmith-configmap.yaml"
-overwrite_file "" "ingress-template.yaml"
+# overwrite_file "" "ingress-template.yaml"
 
 
 
