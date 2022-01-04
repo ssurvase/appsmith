@@ -7,6 +7,8 @@ COPY package.json .
 
 RUN npm i --production
 
+RUN npm i -g @craco/craco
+
 COPY craco.build.config.js .
 COPY craco.common.config.js .
 COPY craco.dev.config.js .
