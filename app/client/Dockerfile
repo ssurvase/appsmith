@@ -9,6 +9,8 @@ RUN npm i
 
 RUN npm i -g @craco/craco tailwindcss autoprefixer
 
+RUN npm i -g tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+
 COPY craco.build.config.js .
 COPY craco.common.config.js .
 COPY craco.dev.config.js .
