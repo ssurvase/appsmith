@@ -3,6 +3,10 @@
 # --------------------------------------------------------------------
 FROM node:14 as BUILDER
 
+COPY package.json .
+
+RUN npm i --production
+
 COPY craco.build.config.js .
 COPY craco.common.config.js .
 COPY craco.dev.config.js .
@@ -15,7 +19,6 @@ COPY gitbook-algolia-lambda.js .
 COPY index.tsx .
 COPY jest.config.js .
 COPY netlify.toml .
-COPY package.json .
 COPY patches .
 COPY public .
 COPY README.md .
