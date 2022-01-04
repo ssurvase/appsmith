@@ -5,7 +5,7 @@ FROM node:14 as BUILDER
 
 COPY package.json .
 
-RUN npm i --production
+RUN npm i 
 
 RUN npm i -g @craco/craco tailwindcss autoprefixer
 
