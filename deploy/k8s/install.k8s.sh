@@ -262,7 +262,7 @@ wait_for_application_start() {
     # The while loop is important because for-loops don't work for dynamic values
     while [[ $timeout -gt 0 ]]; do
         if [[ $address == "" || $address == null ]]; then
-            address=`get svc appsmith-editor -o json | jq -r '.spec.clusterIP'`
+            address=`kubectl get svc appsmith-editor -o json | jq -r '.spec.clusterIP'`
         fi
         status_code="$(curl -s -o /dev/null -w "%{http_code}" $protocol://$address/api/v1 || true)"
         if [[ status_code -eq 401 ]]; then
@@ -301,7 +301,7 @@ desired_os=0
 os=""
 echo -e "🕵️  Detecting your OS"
 check_os
-APPSMITH_INSTALLATION_ID=$(curl -s 'https://api64.ipify.org')
+# APPSMITH_INSTALLATION_ID=$(curl -s 'https://api64.ipify.org')
 
 # Run bye if failure happens
 trap bye EXIT
@@ -524,9 +524,6 @@ if [[ $status_code -ne 401 ]]; then
     echo "++++++++++++++++++++++++++++++++++++++++"
 else
     echo "+++++++++++ SUCCESS ++++++++++++++++++++++++++++++"
-    echo "++++++++++++++++++++++++++++++++++++++++++++++++++"
-    echo "APPSMITH_INSTALLATION_ID :: $APPSMITH_INSTALLATION_ID"
-    echo "++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo "Your installation is complete!"
     echo ""
     if [[ -z $custom_domain ]]; then
