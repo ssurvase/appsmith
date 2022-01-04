@@ -208,7 +208,8 @@ bye() {  # Prints a friendly good bye message and exits the script.
 }
 download_template_file() {
     templates_dir="$(mktemp -d)"
-    template_endpoint="https://raw.githubusercontent.com/appsmithorg/appsmith/master"
+    template_endpoint="https://raw.githubusercontent.com/appveen/appsmith/release"
+    # template_endpoint="https://raw.githubusercontent.com/appsmithorg/appsmith/master"
     mkdir -p "$templates_dir"
     (
         cd "$templates_dir"
