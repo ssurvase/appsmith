@@ -1,70 +1,30 @@
 # --------------------------------------------------------------------
 #  BUILDING UI
 # --------------------------------------------------------------------
-FROM node:14 as BUILDER
+FROM node:14 as build
 
-COPY package.json .
 
-RUN npm i --production
+WORKDIR /app
 
-RUN npm i -g @craco/craco tailwindcss autoprefixer
+COPY package.json ./
+COPY yarn.lock ./
 
-RUN npm i tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+RUN yarn global add @craco/craco craco-alias tailwindcss autoprefixer
 
-# RUN yarn install
+RUN yarn install
 
-COPY craco.build.config.js .
-COPY craco.common.config.js .
-COPY craco.dev.config.js .
-COPY cypress .
-COPY cypress.env.json .
-COPY cypress.json .
-COPY docker .
-COPY generators .
-COPY dummy.ts .
-COPY gitbook-algolia-lambda.js .
-COPY index.tsx .
-COPY jest.config.js .
-COPY netlify.toml .
-COPY patches .
-COPY public .
-COPY README.md .
-COPY README.old.md .
-COPY src .
-COPY start-https.sh .
-COPY stats.json .
-COPY tailwind.config.js .
-COPY test .
-COPY tsconfig.json .
-COPY tsconfig.path.json .
-COPY typings .
-COPY vercel.json .
-COPY yarn.lock .
+COPY . ./
 
-COPY build.sh .
-
-RUN . ./build.sh
-
+RUN ["craco" , "build"]
 
 # --------------------------------------------------------------------
 #  PACKAGING UI
 # --------------------------------------------------------------------
-FROM nginx:1.20-alpine
+FROM nginx:stable-alpine
 
-COPY --from=BUILDER /build /var/www/appsmith
+RUN ls -R
+COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80
 
-ENV APPSMITH_SERVER_PROXY_PASS="http://appsmith-internal-server:8080"
-
-# This is the default nginx template file inside the container.
-# This is replaced by the install.sh script during a deployment
-# COPY ./docker/templates/nginx-app.conf.template /nginx.conf.template
-COPY ./docker/templates/nginx-root.conf.template /nginx-root.conf.template
-
-COPY ./docker/templates/nginx-app-http.conf.template /etc/nginx/templates/
-COPY ./docker/templates/nginx-app-https.conf.template /nginx-app-https.conf.template
-
-# This is the script that is used to start Nginx when the Docker container starts
-COPY ./docker/start-nginx.sh /start-nginx.sh
-CMD ["/start-nginx.sh"]
+CMD ["nginx", "-g", "daemon off;"]
