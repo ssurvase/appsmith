@@ -22,13 +22,13 @@ RUN ["craco" , "build"]
 # --------------------------------------------------------------------
 FROM nginx:stable-alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/build /var/www/appsmith
 
-RUN ls -l /usr/share/nginx/html
+RUN ls -l /var/www/appsmith
 
 EXPOSE 80
 
-ENV APPSMITH_SERVER_PROXY_PASS="http://appsmith-internal-server:8080"
+ENV APPSMITH_SERVER_PROXY_PASS="http://appsmith-backend-service:8080"
 
 # This is the default nginx template file inside the container.
 # This is replaced by the install.sh script during a deployment
