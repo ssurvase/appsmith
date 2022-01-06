@@ -1,8 +1,8 @@
 # --------------------------------------------------------------------
 #  BUILDING UI
 # --------------------------------------------------------------------
-FROM node:14 as build
 
+FROM node:14 as build
 
 WORKDIR /app
 
@@ -10,7 +10,6 @@ COPY package.json ./
 COPY yarn.lock ./
 
 RUN yarn global add @craco/craco craco-alias tailwindcss autoprefixer
-
 RUN yarn install
 
 COPY . ./
@@ -20,24 +19,10 @@ RUN ["craco" , "build"]
 # --------------------------------------------------------------------
 #  PACKAGING UI
 # --------------------------------------------------------------------
+
 FROM nginx:stable-alpine
 
-COPY --from=build /app/build /var/www/appsmith
-
-RUN ls -l /var/www/appsmith
+COPY --from=build /app/build/ /usr/share/nginx/html
+COPY /nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-
-ENV APPSMITH_SERVER_PROXY_PASS="http://appsmith-backend-service:8080"
-
-# This is the default nginx template file inside the container.
-# This is replaced by the install.sh script during a deployment
-# COPY ./docker/templates/nginx-app.conf.template /nginx.conf.template
-COPY ./docker/templates/nginx-root.conf.template /nginx-root.conf.template
-
-COPY ./docker/templates/nginx-app-http.conf.template /etc/nginx/templates/
-COPY ./docker/templates/nginx-app-https.conf.template /nginx-app-https.conf.template
-
-# This is the script that is used to start Nginx when the Docker container starts
-COPY ./docker/start-nginx.sh /start-nginx.sh
-CMD ["/start-nginx.sh"]
