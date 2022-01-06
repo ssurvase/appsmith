@@ -19,19 +19,19 @@ server {
     location /api {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-Host $host;
-        proxy_pass http://appsmith-backend-service:8080;
+        proxy_pass http://localhost:8080;
     }
 
     location /oauth2 {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-Host $host;
-        proxy_pass http://appsmith-backend-service:8080;
+        proxy_pass http://localhost:8080;
     }
 
     location /login {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-Host $host;
-        proxy_pass http://appsmith-backend-service:8080;
+        proxy_pass http://localhost:8080;
     }
 }
 
