@@ -12,23 +12,21 @@ fi
 
 cp /nginx-root.conf.template /etc/nginx/nginx.conf
 
-# if [ -f /nginx.conf.template ]; then
-#   # This is to support installations where the docker-compose.yml file would mount a template confi at this location.
-#   app_template=/nginx.conf.template
-# elif [ -z "$APPSMITH_SSL_CERT_PATH" ]; then
-#   if [ -z "$APPSMITH_DOMAIN" ]; then
-#     export APPSMITH_DOMAIN=_
-#   fi
-#   app_template=/nginx-app-http.conf.template
-# else
-#   if [ -z "$APPSMITH_DOMAIN" ]; then
-#     echo "APPSMITH_DOMAIN is required when SSL is enabled." >&2
-#     exit 2
-#   fi
-#   app_template=/nginx-app-https.conf.template
-# fi
-
- app_template=/nginx-app-http.conf.template
+if [ -f /nginx.conf.template ]; then
+  # This is to support installations where the docker-compose.yml file would mount a template confi at this location.
+  app_template=/nginx.conf.template
+elif [ -z "$APPSMITH_SSL_CERT_PATH" ]; then
+  if [ -z "$APPSMITH_DOMAIN" ]; then
+    export APPSMITH_DOMAIN=_
+  fi
+  app_template=/nginx-app-http.conf.template
+else
+  if [ -z "$APPSMITH_DOMAIN" ]; then
+    echo "APPSMITH_DOMAIN is required when SSL is enabled." >&2
+    exit 2
+  fi
+  app_template=/nginx-app-https.conf.template
+fi
 
 cat "$app_template" \
   | envsubst "$(printf '$%s,' $(env | grep -Eo '^APPSMITH_[A-Z0-9_]+'))" \
