@@ -9,7 +9,7 @@ server {
     proxy_set_header Accept-Encoding "";
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:80;
     }
 
     location /f {
