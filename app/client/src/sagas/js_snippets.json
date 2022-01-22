@@ -593,6 +593,52 @@
     {
         "entities": [
             "datasource",
+            "oracle"
+        ],
+        "language": "sql",
+        "dataType": "STRING",
+        "fields": [],
+        "body": {
+            "snippetMeta": "",
+            "shortTitle": "",
+            "title": "Query data from oracle table",
+            "snippet": "SELECT * FROM table_name",
+            "isTrigger": false,
+            "args": [
+                {
+                    "name": "table_name",
+                    "type": "string"
+                }
+            ],
+            "summary": "To query the entire table data in oracle database, you can use the asterisk (*) in the SELECT clause, which is a shorthand for all column."
+        }
+    },
+    {
+        "entities": [
+            "datasource",
+            "postgres"
+        ],
+        "language": "sql",
+        "dataType": "STRING",
+        "fields": [],
+        "body": {
+            "snippetMeta": "",
+            "shortTitle": "",
+            "title": "Query data from Postgres table",
+            "snippet": "SELECT * FROM table_name",
+            "isTrigger": false,
+            "args": [
+                {
+                    "name": "table_name",
+                    "type": "string"
+                }
+            ],
+            "summary": "To query the entire table data in postgres database, you can use the asterisk (*) in the SELECT clause, which is a shorthand for all column."
+        }
+    },
+    {
+        "entities": [
+            "datasource",
             "postgres"
         ],
         "language": "sql",
