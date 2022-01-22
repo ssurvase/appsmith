@@ -388,17 +388,17 @@ public class OraclePlugin extends BasePlugin {
                                 } else {
                                     value = resultSet.getObject(i);
 
-                                    /**
-                                     * Any type that JDBC does not understand gets mapped to PGobject. PGobject has
-                                     * two attributes: type and value. Hence, when PGobject gets serialized, it gets
-                                     * converted into a JSON like {"type":"citext", "value":"someText"}. Since we are
-                                     * only interested in the value and not the type, it makes sense to extract out
-                                     * the value as a string.
-                                     * Reference: https://jdbc.Oracleql.org/documentation/publicapi/org/Oracleql/util/PGobject.html
-                                     */
-                                    if (value instanceof PGobject) {
-                                        value = ((PGobject) value).getValue();
-                                    }
+//                                    /**
+//                                     * Any type that JDBC does not understand gets mapped to PGobject. PGobject has
+//                                     * two attributes: type and value. Hence, when PGobject gets serialized, it gets
+//                                     * converted into a JSON like {"type":"citext", "value":"someText"}. Since we are
+//                                     * only interested in the value and not the type, it makes sense to extract out
+//                                     * the value as a string.
+//                                     * Reference: https://jdbc.Oracleql.org/documentation/publicapi/org/Oracleql/util/PGobject.html
+//                                     */
+//                                    if (value instanceof ODBobject) {
+//                                        value = ((PGobject) value).getValue();
+//                                    }
                                 }
 
                                 row.put(metaData.getColumnName(i), value);
