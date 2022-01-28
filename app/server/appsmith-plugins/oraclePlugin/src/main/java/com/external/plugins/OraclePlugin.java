@@ -1031,6 +1031,8 @@ public class OraclePlugin extends BasePlugin {
         }
 
         String url = urlBuilder.toString();
+        System.out.println(Thread.currentThread().getName() +
+        ": JDBC url = " + url);
         config.setJdbcUrl(url);
 
         // Configuring leak detection threshold for 60 seconds. Any connection which hasn't been released in 60 seconds
