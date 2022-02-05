@@ -421,19 +421,6 @@ function* handleDatasourceCreatedSaga(actionPayload: ReduxAction<Datasource>) {
       },
     ),
   );
-
-  console.log(
-    "tttttttt",
-    DATA_SOURCES_EDITOR_ID_URL(
-      applicationId,
-      pageId,
-      actionPayload.payload.id,
-      {
-        from: "datasources",
-        ...getQueryParams(),
-      },
-    ),
-  );
 }
 
 function* handleCreateNewApiActionSaga(
