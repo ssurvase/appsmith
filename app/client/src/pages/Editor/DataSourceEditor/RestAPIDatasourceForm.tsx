@@ -85,6 +85,7 @@ interface DatasourceRestApiEditorProps {
     onSuccess?: ReduxAction<unknown>,
   ) => void;
   plugins: Plugin[];
+  datasourceName: any;
 }
 
 type Props = DatasourceRestApiEditorProps &
@@ -274,10 +275,14 @@ class DatasourceRestAPIEditor extends React.Component<Props> {
 
   save = (onSuccess?: ReduxAction<unknown>) => {
     const plugin = this.props.plugins.find((p) => p.name === "REST API");
-    const normalizedValues = formValuesToDatasource(
-      this.props.datasource,
-      this.props.formData,
-    );
+    const normalizedValues = formValuesToDatasource(this.props.datasource, {
+      ...this.props.formData,
+      ...this.props.datasourceName,
+    });
+
+    console.log("datasource", this.props.datasource);
+    console.log("formData", this.props.formData);
+    console.log("normalizedValues", normalizedValues);
 
     AnalyticsUtil.logEvent("SAVE_DATA_SOURCE_CLICK", {
       pageId: this.props.pageId,
@@ -288,13 +293,13 @@ class DatasourceRestAPIEditor extends React.Component<Props> {
       return this.props.updateDatasource(normalizedValues, onSuccess);
     }
 
-    this.props.createDatasource(
-      {
-        ...normalizedValues,
-        pluginId: (plugin as Plugin).id,
-      },
-      onSuccess,
-    );
+    // this.props.createDatasource(
+    //   {
+    //     ...normalizedValues,
+    //     pluginId: (plugin as Plugin).id,
+    //   },
+    //   onSuccess,
+    // );
   };
 
   createApiAction = () => {
@@ -376,16 +381,17 @@ class DatasourceRestAPIEditor extends React.Component<Props> {
     const { datasourceId, deleteDatasource, isDeleting, isSaving } = this.props;
     return (
       <SaveButtonContainer>
-        <ActionButton
-          // accent="error"
-          buttonStyle="DANGER"
-          buttonVariant={ButtonVariantTypes.PRIMARY}
-          className="t--delete-datasource"
-          loading={isDeleting}
-          onClick={() => deleteDatasource(datasourceId)}
-          text="Delete"
-        />
-
+        {datasourceId !== "TEMP-ID-1" && (
+          <ActionButton
+            // accent="error"
+            buttonStyle="DANGER"
+            buttonVariant={ButtonVariantTypes.PRIMARY}
+            className="t--delete-datasource"
+            loading={isDeleting}
+            onClick={() => deleteDatasource(datasourceId)}
+            text="Delete"
+          />
+        )}
         <StyledButton
           className="t--save-datasource"
           disabled={this.disableSave()}
@@ -1040,6 +1046,7 @@ const mapStateToProps = (state: AppState, props: any) => {
     formMeta: getFormMeta(DATASOURCE_REST_API_FORM)(state),
     messages: hintMessages,
     plugins: state.entities.plugins.list,
+    datasourceName: state.ui.datasourceName.name,
   };
 };
 
