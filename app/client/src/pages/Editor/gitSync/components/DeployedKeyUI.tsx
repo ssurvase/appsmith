@@ -1,5 +1,6 @@
 import { Colors } from "constants/Colors";
 import {
+  COPY_SSH_KEY,
   createMessage,
   DELETE_CONFIRMATION_MODAL_TITLE,
   DEPLOY_KEY_USAGE_GUIDE_MESSAGE,
@@ -105,7 +106,7 @@ function CopySSHKey(showCopied: boolean, copyToClipboard: () => void) {
     />
   ) : (
     <TooltipWrapper>
-      <TooltipComponent content="Copy Key">
+      <TooltipComponent content={createMessage(COPY_SSH_KEY)}>
         <Icon
           fillColor={Colors.DARK_GRAY}
           hoverFillColor={Colors.GRAY2}
@@ -123,6 +124,9 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
   const { generateSSHKey } = useSSHKeyPair();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
+  const [showKeyRegeneratedMessage, setShowKeyRegeneratedMessage] = useState(
+    false,
+  );
   const clickHandler = () => {
     AnalyticsUtil.logEvent("GS_GIT_DOCUMENTATION_LINK_CLICK", {
       source: "SSH_KEY_ON_GIT_CONNECTION_TAB",
@@ -134,14 +138,11 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
     generateSSHKey();
     setIsConfirm(false);
     setIsMenuOpen(false);
+    setShowKeyRegeneratedMessage(true);
   }, []);
   return (
     <>
       <Space size={7} />
-      <Text color={Colors.GREY_9} type={TextType.P3}>
-        {createMessage(DEPLOY_KEY_USAGE_GUIDE_MESSAGE)}
-        <LintText onClick={clickHandler}>{createMessage(LEARN_MORE)}</LintText>
-      </Text>
       <FlexRow style={{ position: "relative" }}>
         <DeployedKeyContainer $marginTop={4}>
           <FlexRow>
@@ -211,6 +212,14 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
           </Menu>
         </MoreMenuWrapper>
       </FlexRow>
+      {showKeyRegeneratedMessage && (
+        <Text color={Colors.GREY_9} type={TextType.P3}>
+          {createMessage(DEPLOY_KEY_USAGE_GUIDE_MESSAGE)}
+          <LintText onClick={clickHandler}>
+            {createMessage(LEARN_MORE)}
+          </LintText>
+        </Text>
+      )}
     </>
   );
 }
