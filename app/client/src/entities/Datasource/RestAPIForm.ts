@@ -37,6 +37,7 @@ export interface ApiDatasourceForm {
   sessionSignatureKey: string;
   authType: AuthType;
   authentication?: Authentication;
+  name: string;
 }
 
 export interface Oauth2Common {

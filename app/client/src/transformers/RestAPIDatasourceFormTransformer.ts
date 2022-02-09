@@ -43,6 +43,7 @@ export const datasourceToFormValues = (
     sessionSignatureKey: sessionSignatureKey,
     authType: authType,
     authentication: authentication,
+    name: datasource.name,
   };
 };
 
