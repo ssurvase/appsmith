@@ -576,6 +576,7 @@ export const COMMIT_AND_PUSH = () => "Commit & push";
 export const PULL_CHANGES = () => "PULL CHANGES";
 export const DEPLOY_KEY_TITLE = () => "Deployed Key";
 export const REGENERATE_SSH_KEY = () => "Regenerate SSH Key";
+export const SSH_KEY = () => "SSH Key";
 export const COPY_SSH_KEY = () => "Copy SSH Key";
 export const REGENERATE_KEY_CONFIRM_MESSAGE = () =>
   "This might cause the application to break. This keys needs to be updated in your Git Repo too!";

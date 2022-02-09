@@ -7,6 +7,7 @@ import {
   LEARN_MORE,
   REGENERATE_KEY_CONFIRM_MESSAGE,
   REGENERATE_SSH_KEY,
+  SSH_KEY,
   YES,
 } from "constants/messages";
 import React, { useCallback, useState } from "react";
@@ -143,6 +144,9 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
   return (
     <>
       <Space size={7} />
+      <Text color={Colors.GREY_9} type={TextType.P1}>
+        {createMessage(SSH_KEY)}
+      </Text>
       <FlexRow style={{ position: "relative" }}>
         <DeployedKeyContainer $marginTop={4}>
           <FlexRow>
@@ -213,12 +217,18 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
         </MoreMenuWrapper>
       </FlexRow>
       {showKeyRegeneratedMessage && (
-        <Text color={Colors.GREY_9} type={TextType.P3}>
-          {createMessage(DEPLOY_KEY_USAGE_GUIDE_MESSAGE)}
-          <LintText onClick={clickHandler}>
-            {createMessage(LEARN_MORE)}
-          </LintText>
-        </Text>
+        <>
+          <div>
+            <Text color={Colors.GREY_9} type={TextType.P1}>
+              {createMessage(DEPLOY_KEY_USAGE_GUIDE_MESSAGE)}
+            </Text>
+          </div>
+          <div>
+            <LintText onClick={clickHandler}>
+              {createMessage(LEARN_MORE)}
+            </LintText>
+          </div>
+        </>
       )}
     </>
   );
