@@ -1,19 +1,27 @@
 import { DependencyMap } from "../utils/DynamicBindingUtils";
-import { call, fork, put, select, take } from "redux-saga/effects";
+import { call, fork, put, select, take, TakeEffect } from "redux-saga/effects";
 import {
   getEvaluationInverseDependencyMap,
   getDataTree,
 } from "../selectors/dataTreeSelectors";
 import { DataTree, ENTITY_TYPE } from "entities/DataTree/dataTreeFactory";
 import { getActions } from "../selectors/entitiesSelector";
-import { ActionData } from "../reducers/entityReducers/actionsReducer";
+import {
+  ActionData,
+  ActionDataState,
+} from "../reducers/entityReducers/actionsReducer";
 import {
   ReduxActionErrorTypes,
   ReduxActionTypes,
 } from "../constants/ReduxActionConstants";
 import log from "loglevel";
 import * as Sentry from "@sentry/react";
-import { get } from "lodash";
+import { cloneDeep, get } from "lodash";
+import _ from "lodash";
+import { isAction } from "workers/evaluationUtils";
+
+// const globalLoadingActions = new Set<string>();
+const activeActionChains: Record<string, Set<string>> = {};
 
 const createEntityDependencyMap = (dependencyMap: DependencyMap) => {
   const entityDepMap: DependencyMap = {};
@@ -36,11 +44,12 @@ const createEntityDependencyMap = (dependencyMap: DependencyMap) => {
 };
 
 const getEntityDependencies = (
+  dataTree: DataTree,
   entityNames: string[],
   inverseMap: DependencyMap,
   visited: Set<string>,
-): Set<string> => {
-  const dependantsEntities: Set<string> = new Set();
+): DataTree => {
+  const dependantsEntities: DataTree = {};
   entityNames.forEach((entityName) => {
     if (entityName in inverseMap) {
       inverseMap[entityName].forEach((dependency) => {
@@ -54,15 +63,16 @@ const getEntityDependencies = (
           return;
         }
         visited.add(dependantEntityName);
-        dependantsEntities.add(dependantEntityName);
+        Object.assign(dependantsEntities, {
+          [dependantEntityName]: dataTree[dependantEntityName],
+        });
         const childDependencies = getEntityDependencies(
-          Array.from(dependantsEntities),
+          dataTree,
+          Object.keys(dependantsEntities),
           inverseMap,
           visited,
         );
-        childDependencies.forEach((entityName) => {
-          dependantsEntities.add(entityName);
-        });
+        Object.assign(dependantsEntities, childDependencies);
       });
     }
   });
@@ -80,40 +90,107 @@ const ACTION_EXECUTION_REDUX_ACTIONS = [
   ReduxActionTypes.SET_EVALUATED_TREE,
 ];
 
-function* setWidgetsLoadingSaga() {
+function* setWidgetsLoadingSaga(takeEffect: TakeEffect) {
+  // get all widgets evaluted data
+  const dataTree: DataTree = yield select(getDataTree);
+  const actions: ActionDataState = yield select(getActions);
+  // const actionNames = actions.map((action) => action.config.name);
   const inverseMap = yield select(getEvaluationInverseDependencyMap);
   const entityDependencyMap = createEntityDependencyMap(inverseMap);
-  const actions = yield select(getActions);
-  const isLoadingActions: string[] = actions
-    .filter((action: ActionData) => action.isLoading)
-    .map((action: ActionData) => action.config.name);
+  let action: ActionData | undefined;
 
-  const loadingEntities = getEntityDependencies(
-    isLoadingActions,
+  switch (takeEffect.type) {
+    case ReduxActionTypes.EXECUTE_PLUGIN_ACTION_REQUEST:
+      action = actions.find(
+        (a) => a.config.id === get(takeEffect.payload, "id"),
+      );
+      if (action) {
+        const actionNameId = action.config.name + "-" + action.config.id;
+        const dependantEntities = getEntityDependencies(
+          dataTree,
+          [action.config.name],
+          entityDependencyMap,
+          new Set<string>(),
+        );
+        // console.log("Hello", dependantEntities);
+        const actionChain = new Set(
+          Object.entries(dependantEntities)
+            .filter(([, entity]) => isAction(entity))
+            .map(
+              ([name, entity]) => name + "-" + get(entity, ["actionId"], ""),
+            ),
+        );
+        actionChain.add(actionNameId);
+        _.set(activeActionChains, actionNameId, actionChain);
+      }
+      break;
+
+    case ReduxActionTypes.EXECUTE_PLUGIN_ACTION_SUCCESS:
+    case ReduxActionErrorTypes.EXECUTE_PLUGIN_ACTION_ERROR:
+      action = actions.find(
+        (a) => a.config.id === get(takeEffect.payload, "id"),
+      );
+      if (action) {
+        for (const chainName in activeActionChains) {
+          const actionChain = get(activeActionChains, chainName);
+          if (actionChain.has(action.config.name + "-" + action.config.id)) {
+            actionChain.delete(action.config.name + "-" + action.config.id);
+            actionChain.size === 0 && delete activeActionChains[chainName];
+          }
+        }
+      }
+      break;
+
+    case ReduxActionTypes.SET_EVALUATED_TREE:
+      break;
+    case ReduxActionTypes.RUN_ACTION_REQUEST:
+      break;
+    case ReduxActionTypes.RUN_ACTION_SUCCESS:
+      break;
+    default:
+      break;
+  }
+
+  const activeChainDependantEnitites = getEntityDependencies(
+    dataTree,
+    Object.keys(activeActionChains).map((name) => name.split("-")[0]),
     entityDependencyMap,
     new Set<string>(),
   );
 
-  // get all widgets evaluted data
-  const dataTree: DataTree = yield select(getDataTree);
+  const loadingEntites = new Set<string>();
   // check animateLoading is active on current widgets and set
-  Object.entries(dataTree).forEach(([entityName, entity]) => {
-    if ("ENTITY_TYPE" in entity && entity.ENTITY_TYPE === ENTITY_TYPE.WIDGET)
-      if (get(dataTree, [entityName, "animateLoading"]) === false) {
-        loadingEntities.delete(entityName);
-      }
-  });
+  Object.entries(activeChainDependantEnitites).forEach(
+    ([entityName, entity]) => {
+      if ("ENTITY_TYPE" in entity && entity.ENTITY_TYPE === ENTITY_TYPE.WIDGET)
+        if (get(dataTree, [entityName, "animateLoading"]) === true) {
+          loadingEntites.add(entityName);
+        }
+    },
+  );
+
+  console.log("Hello REDUX", takeEffect.type);
+
+  console.log("Hello ACTION_CHAIN", cloneDeep(activeActionChains));
+
+  console.log(
+    "hello DEPENDANT_ENTITES",
+    Object.keys(activeChainDependantEnitites),
+  );
+
+  console.log("hello LOADING_ENTITES", loadingEntites);
+  console.log("hello ----------------------------");
 
   yield put({
     type: ReduxActionTypes.SET_LOADING_ENTITIES,
-    payload: loadingEntities,
+    payload: loadingEntites,
   });
 }
 
 function* actionExecutionChangeListenerSaga() {
   while (true) {
-    yield take(ACTION_EXECUTION_REDUX_ACTIONS);
-    yield fork(setWidgetsLoadingSaga);
+    const takeEffect: TakeEffect = yield take(ACTION_EXECUTION_REDUX_ACTIONS);
+    yield fork(setWidgetsLoadingSaga, takeEffect);
   }
 }
 
