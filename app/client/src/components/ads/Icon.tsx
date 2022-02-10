@@ -142,6 +142,7 @@ import EditBoxLineIcon from "remixicon-react/EditBoxLineIcon";
 import StarLineIcon from "remixicon-react/StarLineIcon";
 import StarFillIcon from "remixicon-react/StarFillIcon";
 import Settings2LineIcon from "remixicon-react/Settings2LineIcon";
+import MagicLineIcon from "remixicon-react/MagicLineIcon";
 
 export enum IconSize {
   XXS = "extraExtraSmall",
@@ -240,6 +241,7 @@ export const IconCollection = [
   "edit-line",
   "edit-box-line",
   "emoji",
+  "enterprise",
   "error",
   "expand-less",
   "expand-more",
@@ -268,6 +270,7 @@ export const IconCollection = [
   "link-2",
   "logout",
   "manage",
+  "magic-line",
   "mobile",
   "more-2-fill",
   "news-paper",
@@ -512,6 +515,9 @@ const Icon = forwardRef(
       case "emoji":
         returnIcon = <Emoji />;
         break;
+      case "enterprise":
+        returnIcon = <MagicLineIcon />;
+        break;
       case "error":
         returnIcon = <ErrorIcon />;
         break;
@@ -595,6 +601,9 @@ const Icon = forwardRef(
         break;
       case "manage":
         returnIcon = <ManageIcon />;
+        break;
+      case "magic-line":
+        returnIcon = <MagicLineIcon />;
         break;
       case "mobile":
         returnIcon = <MobileIcon />;

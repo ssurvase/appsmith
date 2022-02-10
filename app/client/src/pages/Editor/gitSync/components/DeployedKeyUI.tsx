@@ -4,7 +4,6 @@ import {
   createMessage,
   DELETE_CONFIRMATION_MODAL_TITLE,
   DEPLOY_KEY_USAGE_GUIDE_MESSAGE,
-  LEARN_MORE,
   REGENERATE_KEY_CONFIRM_MESSAGE,
   REGENERATE_SSH_KEY,
   SSH_KEY,
@@ -23,6 +22,10 @@ import { Position } from "@blueprintjs/core";
 import MenuItem from "components/ads/MenuItem";
 import Button, { Category, Size } from "components/ads/Button";
 import { useSSHKeyPair } from "../hooks";
+import {
+  NotificationBanner,
+  NotificationVariant,
+} from "components/ads/NotificationBanner";
 
 const TooltipWrapper = styled.div`
   display: flex;
@@ -58,17 +61,6 @@ const KeyText = styled.span`
   color: ${Colors.CODE_GRAY};
 `;
 
-const LintText = styled.a`
-  :hover {
-    color: ${Colors.CRUSTA};
-  }
-
-  color: ${Colors.CRUSTA};
-  cursor: pointer;
-  font-weight: 500;
-  margin-left: ${(props) => props.theme.spaces[1]}px;
-`;
-
 const MoreMenuWrapper = styled.div`
   padding: 8px;
   align-items: center;
@@ -96,6 +88,10 @@ type DeployedKeyUIProps = {
   SSHKeyPair: string;
   isImport?: boolean;
 };
+
+const NotificationBannerContainer = styled.div`
+  max-width: 456px;
+`;
 
 function CopySSHKey(showCopied: boolean, copyToClipboard: () => void) {
   return showCopied ? (
@@ -128,7 +124,7 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
   const [showKeyRegeneratedMessage, setShowKeyRegeneratedMessage] = useState(
     false,
   );
-  const clickHandler = () => {
+  const learnMoreClickHandler = () => {
     AnalyticsUtil.logEvent("GS_GIT_DOCUMENTATION_LINK_CLICK", {
       source: "SSH_KEY_ON_GIT_CONNECTION_TAB",
     });
@@ -169,7 +165,7 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
             onOpening={() => {
               setIsConfirm(false);
             }}
-            position={Position.RIGHT_TOP}
+            position={Position.BOTTOM}
             target={
               <MoreOptionsContainer>
                 <Icon
@@ -217,18 +213,20 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
         </MoreMenuWrapper>
       </FlexRow>
       {showKeyRegeneratedMessage && (
-        <>
-          <div>
-            <Text color={Colors.GREY_9} type={TextType.P1}>
-              {createMessage(DEPLOY_KEY_USAGE_GUIDE_MESSAGE)}
-            </Text>
-          </div>
-          <div>
-            <LintText onClick={clickHandler}>
-              {createMessage(LEARN_MORE)}
-            </LintText>
-          </div>
-        </>
+        <NotificationBannerContainer>
+          <NotificationBanner
+            canClose
+            learnMoreClickHandler={learnMoreClickHandler}
+            onClose={() => setShowKeyRegeneratedMessage(false)}
+            variant={NotificationVariant.info}
+          >
+            <div>
+              <Text color={Colors.GREY_9} type={TextType.P3}>
+                {createMessage(DEPLOY_KEY_USAGE_GUIDE_MESSAGE)}
+              </Text>
+            </div>
+          </NotificationBanner>
+        </NotificationBannerContainer>
       )}
     </>
   );
