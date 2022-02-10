@@ -42,7 +42,7 @@ export const IconWrapper = styled.div<IconProps>`
       fill: ${props.background || props.theme.colors.paneBG};
     }
     rect {
-      fill: ${props.background || props.theme.colors.propertyPane.jsIconBg};
+      fill: ${props.background || props.theme.colors.propertyPane?.jsIconBg};
     }`
         : ""}
   }
