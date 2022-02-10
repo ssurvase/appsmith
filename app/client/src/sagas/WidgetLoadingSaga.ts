@@ -105,6 +105,7 @@ function* setWidgetsLoadingSaga(takeEffect: TakeEffect) {
         (a) => a.config.id === get(takeEffect.payload, "id"),
       );
       if (action) {
+        // bad convention for splitting name and id
         const actionNameId = action.config.name + "-" + action.config.id;
         const dependantEntities = getEntityDependencies(
           dataTree,
