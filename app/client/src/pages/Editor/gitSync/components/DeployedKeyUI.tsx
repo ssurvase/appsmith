@@ -216,6 +216,7 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
         <NotificationBannerContainer>
           <NotificationBanner
             canClose
+            className={"enterprise"}
             learnMoreClickHandler={learnMoreClickHandler}
             onClose={() => setShowKeyRegeneratedMessage(false)}
             variant={NotificationVariant.info}

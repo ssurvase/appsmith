@@ -21,6 +21,7 @@ type NotificationBannerProps = {
   children?: ReactElement | ReactElement[];
   style?: React.CSSProperties;
   learnMoreClickHandler?: any;
+  className?: string;
 };
 
 const FlexContainer = styled.div`
@@ -109,7 +110,7 @@ const LearnMoreContainer = styled.div``;
 
 export function NotificationBanner(props: NotificationBannerProps) {
   return (
-    <FlexContainer className={"enterprise"} style={props.style}>
+    <FlexContainer className={props.className} style={props.style}>
       <IconContainer>
         {props.hasIcon && <NotificationIcon variant={props.variant} />}
       </IconContainer>
