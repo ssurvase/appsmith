@@ -7,6 +7,7 @@ import {
   REGENERATE_KEY_CONFIRM_MESSAGE,
   REGENERATE_SSH_KEY,
   SSH_KEY,
+  SSH_KEY_GENERATED,
   YES,
 } from "constants/messages";
 import React, { useCallback, useState } from "react";
@@ -26,6 +27,8 @@ import {
   NotificationBanner,
   NotificationVariant,
 } from "components/ads/NotificationBanner";
+import { Toaster } from "components/ads/Toast";
+import { Variant } from "components/ads/common";
 
 const TooltipWrapper = styled.div`
   display: flex;
@@ -120,10 +123,11 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
   const { copyToClipboard, deployKeyDocUrl, showCopied, SSHKeyPair } = props;
   const { generateSSHKey } = useSSHKeyPair();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isConfirm, setIsConfirm] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [showKeyRegeneratedMessage, setShowKeyRegeneratedMessage] = useState(
     false,
   );
+
   const learnMoreClickHandler = () => {
     AnalyticsUtil.logEvent("GS_GIT_DOCUMENTATION_LINK_CLICK", {
       source: "SSH_KEY_ON_GIT_CONNECTION_TAB",
@@ -133,9 +137,13 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
   const regenerateKey = useCallback(() => {
     AnalyticsUtil.logEvent("GS_REGENERATE_SSH_KEY_CONFIRM_CLICK");
     generateSSHKey();
-    setIsConfirm(false);
+    setShowConfirmation(false);
     setIsMenuOpen(false);
     setShowKeyRegeneratedMessage(true);
+    Toaster.show({
+      text: createMessage(SSH_KEY_GENERATED),
+      variant: Variant.success,
+    });
   }, []);
   return (
     <>
@@ -160,10 +168,10 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
             className="more"
             onClosing={() => {
               setIsMenuOpen(false);
-              setIsConfirm(false);
+              setShowConfirmation(false);
             }}
             onOpening={() => {
-              setIsConfirm(false);
+              setShowConfirmation(false);
             }}
             position={Position.BOTTOM}
             target={
@@ -174,7 +182,7 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
                   name="more-2-fill"
                   onClick={() => {
                     AnalyticsUtil.logEvent("GS_REGENERATE_SSH_KEY_MORE_CLICK");
-                    setIsConfirm(false);
+                    setShowConfirmation(false);
                     setIsMenuOpen(!isMenuOpen);
                   }}
                   size={IconSize.XXXXL}
@@ -182,14 +190,14 @@ function DeployedKeyUI(props: DeployedKeyUIProps) {
               </MoreOptionsContainer>
             }
           >
-            {isMenuOpen && !isConfirm && (
+            {isMenuOpen && !showConfirmation && (
               <MenuItem
                 cypressSelector="t--regenerate-sshkey"
-                onSelect={() => setIsConfirm(true)}
+                onSelect={() => setShowConfirmation(true)}
                 text={createMessage(REGENERATE_SSH_KEY)}
               />
             )}
-            {isMenuOpen && isConfirm && (
+            {isMenuOpen && showConfirmation && (
               <ConfirmMenuItem>
                 <Text type={TextType.P3}>
                   {createMessage(REGENERATE_KEY_CONFIRM_MESSAGE)}
