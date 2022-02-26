@@ -3496,9 +3496,9 @@ public class DatabaseChangelog {
          * This method holds the steps to transform data before it is migrated to UQI schema.
          * Each transformation is uniquely identified by the combination of plugin name and the transformation name.
          *
-         * @param pluginName - name of the plugin for which the transformation is intended
+         * @param pluginName         - name of the plugin for which the transformation is intended
          * @param transformationName - name of the transformation relative to the plugin
-         * @param value - value that needs to be transformed
+         * @param value              - value that needs to be transformed
          * @return - transformed value
          */
         public Object transformData(String pluginName, String transformationName, Object value) {
@@ -3580,8 +3580,8 @@ public class DatabaseChangelog {
     }
 
     public Map iteratePluginSpecifiedTemplatesAndCreateFormDataMultipleOptions(List<Property> pluginSpecifiedTemplates,
-               Map<Integer, List<String>> migrationMap, Map<Integer, String> uqiDataTransformationMap,
-               UQIMigrationDataTransformer dataTransformer, String pluginName) {
+                                                                               Map<Integer, List<String>> migrationMap, Map<Integer, String> uqiDataTransformationMap,
+                                                                               UQIMigrationDataTransformer dataTransformer, String pluginName) {
 
         if (pluginSpecifiedTemplates != null && !pluginSpecifiedTemplates.isEmpty()) {
             Map<String, Object> formData = new HashMap<>();
@@ -3672,8 +3672,8 @@ public class DatabaseChangelog {
      * @param dynamicBindingPathList : old dynamicBindingPathList
      * @param objectMapper
      * @param action
-     * @param migrationMap : A mapping from `pluginSpecifiedTemplates` index to attribute path in UQI model. For
-     *                     reference, please check out the `s3MigrationMap` defined above.
+     * @param migrationMap           : A mapping from `pluginSpecifiedTemplates` index to attribute path in UQI model. For
+     *                               reference, please check out the `s3MigrationMap` defined above.
      * @return : updated dynamicBindingPathList - ported to UQI model.
      */
     private List<Property> getUpdatedDynamicBindingPathList(List<Property> dynamicBindingPathList,
@@ -4109,7 +4109,7 @@ public class DatabaseChangelog {
                 .include(fieldName(QDatasource.datasource.organizationId));
 
         List<Datasource> datasources = mongockTemplate.find(datasourceQuery, Datasource.class);
-        for(Datasource datasource: datasources) {
+        for (Datasource datasource : datasources) {
             final Update update = new Update();
             final String gitSyncId = datasource.getOrganizationId() + "_" + new ObjectId();
             update.set(fieldName(QDatasource.datasource.gitSyncId), gitSyncId);
@@ -4125,7 +4125,7 @@ public class DatabaseChangelog {
                 .addCriteria(where(fieldName(QApplication.application.pages)).exists(true));
         List<Application> applications = mongockTemplate.find(applicationQuery, Application.class);
 
-        for(Application application: applications) {
+        for (Application application : applications) {
             application.getPages().forEach(page -> {
                 page.setDefaultPageId(page.getId());
             });
@@ -4187,7 +4187,7 @@ public class DatabaseChangelog {
                 defaultResourceUpdates.set(fieldName(QNewPage.newPage.publishedPage) + "." + "layouts", page.getPublishedPage().getLayouts());
             }
 
-            if (!StringUtils.isEmpty(applicationId) ) {
+            if (!StringUtils.isEmpty(applicationId)) {
                 mongockTemplate.updateFirst(
                         query(where(fieldName(QNewPage.newPage.id)).is(page.getId())),
                         defaultResourceUpdates,
@@ -4229,9 +4229,9 @@ public class DatabaseChangelog {
                 unpublishedActionDTODefaults.setPageId(unpublishedAction.getPageId());
                 unpublishedActionDTODefaults.setCollectionId(unpublishedAction.getCollectionId());
                 defaultResourceUpdates.set(
-                                fieldName(QNewAction.newAction.unpublishedAction) + "." + fieldName(QNewAction.newAction.unpublishedAction.defaultResources),
-                                unpublishedActionDTODefaults
-                        );
+                        fieldName(QNewAction.newAction.unpublishedAction) + "." + fieldName(QNewAction.newAction.unpublishedAction.defaultResources),
+                        unpublishedActionDTODefaults
+                );
             }
 
             ActionDTO publishedAction = action.getPublishedAction();
@@ -4458,8 +4458,8 @@ public class DatabaseChangelog {
     public void clearRedisCache(ReactiveRedisOperations<String, String> reactiveRedisOperations) {
         final String script =
                 "for _,k in ipairs(redis.call('keys','spring:session:sessions:*'))" +
-                " do redis.call('del',k) " +
-                "end";
+                        " do redis.call('del',k) " +
+                        "end";
         final Flux<Object> flushdb = reactiveRedisOperations.execute(RedisScript.of(script));
 
         flushdb.subscribe();
@@ -4621,7 +4621,7 @@ public class DatabaseChangelog {
         );
 
         // Query to get action id from all Firestore actions
-        Query queryToGetActionIds =query(
+        Query queryToGetActionIds = query(
                 where(fieldName(QNewAction.newAction.pluginId)).is(firestorePlugin.getId())
                         .and(fieldName(QNewAction.newAction.deleted)).ne(true)
         );
@@ -4646,7 +4646,7 @@ public class DatabaseChangelog {
             ActionDTO unpublishedAction = firestoreAction.getUnpublishedAction();
 
             // No migrations required if action configuration does not exist.
-            if (unpublishedAction == null || unpublishedAction.getActionConfiguration() == null ) {
+            if (unpublishedAction == null || unpublishedAction.getActionConfiguration() == null) {
                 continue;
             }
 
@@ -4690,6 +4690,39 @@ public class DatabaseChangelog {
                 update("datasourceConfiguration.properties.$.value", "mongodb+srv://mockdb_super:****@mockdb.kce5o.mongodb.net/movies"),
                 Datasource.class
         );
+    }
+
+    @ChangeSet(order = "107", id = "add-oracle-plugin", author = "")
+    public void addOraclePlugin(MongockTemplate mongockTemplate) {
+        Plugin plugin = new Plugin();
+        plugin.setName("Oracle Plugin");
+        plugin.setType(PluginType.DB);
+        plugin.setPackageName("oracle-plugin");
+        plugin.setUiComponent("DbEditorForm");
+        plugin.setResponseType(Plugin.ResponseType.JSON);
+        plugin.setIconLocation("https://1.bp.blogspot.com/-olEGUVAbDOg/YS_VDSoSMFI/AAAAAAAAL5k/avUIQTjd2dkflGsbVp8wxIueT8HhMklIgCLcBGAsYHQ/s0/oracle-db.png");
+        plugin.setDocumentationLink("https://docs.appsmith.com/datasource-reference/querying-arango-db");
+        plugin.setDefaultInstall(true);
+        try {
+            mongockTemplate.insert(plugin);
+        } catch (DuplicateKeyException e) {
+            log.warn(plugin.getPackageName() + " already present in database.");
+        }
+
+        installPluginToAllOrganizations(mongockTemplate, plugin.getId());
+    }
+
+    @ChangeSet(order = "108", id = "set-svg-logo-to-oracle-plugin", author = "")
+    public void setSvgLogoToOraclePluginIcon(MongockTemplate mongoTemplate) {
+        for (Plugin plugin : mongoTemplate.findAll(Plugin.class)) {
+            if ("oracle-plugin".equals(plugin.getPackageName())) {
+                plugin.setIconLocation("https://1.bp.blogspot.com/-olEGUVAbDOg/YS_VDSoSMFI/AAAAAAAAL5k/avUIQTjd2dkflGsbVp8wxIueT8HhMklIgCLcBGAsYHQ/s0/oracle-db.png");
+            } else {
+                continue;
+            }
+
+            mongoTemplate.save(plugin);
+        }
     }
 
 }
